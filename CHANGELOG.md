@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.9] - 2025-12-??
+
+### Changes
+
+- Fixed [issue #33](https://github.com/codedread/spaces/issues/33): Allow setting the Active space name from quick-switch mode.
+- Increased unit test coverage from 23.62% to 23.91%.
+
 ## [1.1.8] - 2025-12-03
 
 ### Changes

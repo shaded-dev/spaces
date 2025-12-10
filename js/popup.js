@@ -14,7 +14,7 @@ const NO_HOTKEY = 'no hotkey set';
  * @param {string} action The popup action ('switch' or 'move')
  */
 export async function handlePopupMenuClick(action) {
-    const params = await chrome.runtime.sendMessage({'action': 'generatePopupParams', 'popupAction': action});
+    const params = await chrome.runtime.sendMessage({ 'action': 'generatePopupParams', 'popupAction': action });
     if (!params) return;
     window.location.hash = params;
     window.location.reload();
@@ -32,14 +32,44 @@ export function setGlobalCurrentSpace(space) {
     globalCurrentSpace = space;
 }
 
+/**
+ * Determines the window ID to use based on URL hash and current window.
+ * This is the core logic for the bug fix that ensures correct window ID selection.
+ * @param {string} urlString - The full URL string including hash
+ * @param {number|null} currentWindowId - The ID of the current window, or null if not available yet
+ * @returns {number|false} The window ID to use, or false if invalid
+ */
+export function getWindowIdFromContext(urlString, currentWindowId) {
+    // First check if windowId is in the URL hash (e.g., when opened in quick-switch mode)
+    // This ensures we use the original browser window, not the popup window itself
+    const windowIdFromHash = getHashVariable('windowId', urlString);
+    let windowId;
+
+    if (windowIdFromHash && windowIdFromHash !== 'false') {
+        windowId = parseInt(windowIdFromHash, 10);
+    } else if (currentWindowId !== null) {
+        // Fallback to current window if not in hash (e.g., when opened from extension icon)
+        windowId = currentWindowId;
+    } else {
+        // No window ID available
+        return false;
+    }
+
+    // Validate the window ID (must be a positive integer)
+    return !isNaN(windowId) && windowId > 0 ? windowId : false;
+}
+
 /** Initialize the popup window. */
-function initializePopup() {
+export function initializePopup() {
     document.addEventListener('DOMContentLoaded', async () => {
         const url = getHashVariable('url', window.location.href);
         globalUrl = url !== '' ? decodeURIComponent(url) : false;
+
+        // Get the current window ID if needed (for fallback when no hash parameter exists)
         const currentWindow = await chrome.windows.getCurrent({ populate: true });
-        const windowId = currentWindow.id;
-        globalWindowId = windowId !== '' ? windowId : false;
+
+        // Determine which window ID to use (from hash or current window)
+        globalWindowId = getWindowIdFromContext(window.location.href, currentWindow.id);
         globalTabId = getHashVariable('tabId', window.location.href);
         const sessionName = getHashVariable(
             'sessionName',
