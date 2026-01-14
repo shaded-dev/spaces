@@ -12,6 +12,12 @@ All notable changes to this project will be documented in this file.
 - Added unit tests for `getISO8601Date()` function (15 test cases)
 - Test coverage maintained at 23.79%
 
+### Fixed
+
+- Fixed missing semicolon in background service worker causing syntax error
+- Fixed console error "Receiving end does not exist" when spaces window is closed
+- Improved error handling for background script message passing
+
 ## [1.2.0] - 2026-01-14
 
 ### Added

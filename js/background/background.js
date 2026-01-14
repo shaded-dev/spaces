@@ -729,6 +729,10 @@ async function updateSpacesWindow(source) {
             chrome.runtime.sendMessage({
                 action: 'updateSpaces',
                 spaces: allSpaces,
+            }).catch(() => {
+                // Spaces window closed - this is expected, ignore the error
+                spacesOpenWindowId = false;
+                chrome.storage.local.remove('spacesOpenWindowId');
             });
         } catch (err) {
             // eslint-disable-next-line no-console
