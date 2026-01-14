@@ -79,9 +79,18 @@
         <div class="blocker"></div>
         <div class="modal">
             <h2>Import a new space</h2>
+            <div class="importOptions">
+                <div class="fileImport">
+                    <input type="file" id="importFile" accept=".json,.txt" style="display: none;" />
+                    <button id="chooseFileBtn" class="button">Choose File</button>
+                    <span id="fileName"></span>
+                </div>
+                <div class="orDivider">— or paste below —</div>
+            </div>
             <textarea id="importTextArea" spellcheck="false"
-                placeholder="Paste a list of line-separated urls or the contents of a spaces backup file" wrap="off"
-                rows="10"></textarea>
+                placeholder="Paste line-separated URLs or JSON backup content" wrap="off"
+                rows="8"></textarea>
+            <div id="importError" class="error-message"></div>
             <a id="importBtn" class="button" href="#">Import</a>
         </div>
 

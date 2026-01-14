@@ -431,3 +431,30 @@ a.active {
     background-color: var(--button-bg-hover);
     text-decoration: none;
 }
+
+.importOptions {
+    margin-bottom: 15px;
+}
+.fileImport {
+    margin-bottom: 10px;
+}
+.fileImport .button {
+    padding: 8px 20px;
+    margin-right: 10px;
+}
+#fileName {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+.orDivider {
+    text-align: center;
+    color: var(--text-muted);
+    margin: 15px 0;
+    font-size: 14px;
+}
+.error-message {
+    color: var(--duplicate-color);
+    font-size: 14px;
+    margin-top: 10px;
+    min-height: 20px;
+}

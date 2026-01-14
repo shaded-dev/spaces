@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2026-01-14
+
+### Added
+
+- **File Selection for Import**: Added file picker button for importing spaces instead of only paste
+- **Import Format Validation**: Automatic detection and validation of JSON backup files vs URL list text files
+- **Import Error Messages**: Clear error messages for invalid import formats with specific guidance
+- **Collision Detection**: Validates import content structure before processing (name and tabs required)
+- **Comprehensive Unit Tests**: Added 28 new tests for `validateImportFormat` function covering:
+  - Empty input validation
+  - Valid and invalid JSON backup formats
+  - Valid and invalid URL list formats
+  - Edge cases (long lists, special characters, mixed line endings)
+  - Return value structure validation
+
+### Changed
+
+- **Import Modal UI**: Enhanced with "Choose File" button and "or paste below" divider
+- **Import Workflow**: Now validates format before processing and provides specific error feedback
+- **Import Modal Close**: Only closes modal after successful import
+
+### Technical Details
+
+- Added `validateImportFormat()` function with comprehensive validation logic
+- Added `handleFileSelect()` for file upload handling
+- Enhanced `handleImport()` with validation and error handling
+- File picker accepts `.json` and `.txt` files
+- Filters out invalid URLs (missing protocol) from URL lists
+- Validates JSON backup structure (must be array with name/tabs properties)
+
+### Test Coverage
+
+- Added 28 unit tests for import validation (`tests/validateImportFormat.test.js`)
+- All tests passing with comprehensive edge case coverage
+
 ## [1.2.1] - 2026-01-14
 
 ### Changed

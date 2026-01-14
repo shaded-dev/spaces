@@ -412,35 +412,118 @@ async function handleClose(
     renderSpaceDetailFn(false, false);
 }
 
+/**
+ * Validates import content and determines format
+ * @param {string} content - The content to validate
+ * @returns {Object} Validation result with type, valid flag, data, and optional error
+ */
+function validateImportFormat(content) {
+    if (!content || content.trim().length === 0) {
+        return { type: 'empty', valid: false, error: 'No content to import' };
+    }
+
+    // Try JSON first (backup file format)
+    try {
+        const parsed = JSON.parse(content);
+        
+        // Validate it's an array of space objects
+        if (!Array.isArray(parsed)) {
+            return { type: 'json', valid: false, error: 'JSON must be an array of spaces' };
+        }
+        
+        if (parsed.length === 0) {
+            return { type: 'json', valid: false, error: 'Backup file contains no spaces' };
+        }
+        
+        // Validate each space has required fields
+        const invalidSpace = parsed.find(space => !space.name || !space.tabs);
+        if (invalidSpace) {
+            return { type: 'json', valid: false, error: 'Invalid backup format: spaces must have name and tabs' };
+        }
+        
+        return { type: 'json', valid: true, data: parsed };
+    } catch (e) {
+        // Not valid JSON, try URL list format
+        const lines = content.split('\n');
+        const urls = lines.filter(line => 
+            line.trim().length > 0 && line.indexOf('://') > 0
+        );
+        
+        if (urls.length > 0) {
+            return { type: 'txt', valid: true, data: urls };
+        }
+        
+        return { 
+            type: 'unknown', 
+            valid: false, 
+            error: 'No valid URLs or JSON backup found. Expected line-separated URLs or JSON backup file.' 
+        };
+    }
+}
+
+/**
+ * Handles file selection for import
+ */
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Show filename
+    nodes.fileName.textContent = file.name;
+    
+    // Clear any previous errors
+    nodes.importError.textContent = '';
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        nodes.modalInput.value = e.target.result;
+    };
+    reader.onerror = function() {
+        nodes.importError.textContent = 'Error reading file. Please try again.';
+    };
+    reader.readAsText(file);
+}
+
 // import accepts either a newline separated list of urls or a json backup object
 async function handleImport() {
-    let urlList;
-    let spaces;
-
     const rawInput = nodes.modalInput.value;
+    
+    // Clear previous errors
+    nodes.importError.textContent = '';
 
-    // check for json object
+    // Validate the input format
+    const validation = validateImportFormat(rawInput);
+    
+    if (!validation.valid) {
+        nodes.importError.textContent = validation.error;
+        return;
+    }
+
     try {
-        spaces = JSON.parse(rawInput);
-        await performRestoreFromBackup(spaces);
-        updateSpacesList();
-    } catch (e) {
-        // otherwise treat as a list of newline separated urls
-        if (rawInput.trim().length > 0) {
-            urlList = rawInput.split('\n');
-
-            // filter out bad urls
-            urlList = urlList.filter(url => {
-                if (url.trim().length > 0 && url.indexOf('://') > 0)
-                    return true;
-                return false;
-            });
-
-            if (urlList.length > 0) {
-                const session = await performSessionImport(urlList);
-                if (session) reroute(session.id, false, true);
+        if (validation.type === 'json') {
+            // Import backup file (multiple spaces)
+            await performRestoreFromBackup(validation.data);
+            toggleModal(false);
+            updateSpacesList();
+            // Clear the form after successful import
+            nodes.modalInput.value = '';
+            nodes.fileName.textContent = '';
+        } else if (validation.type === 'txt') {
+            // Import URL list (single space)
+            const session = await performSessionImport(validation.data);
+            if (session) {
+                toggleModal(false);
+                reroute(session.id, false, true);
+                // Clear the form after successful import
+                nodes.modalInput.value = '';
+                nodes.fileName.textContent = '';
+            } else {
+                nodes.importError.textContent = 'Failed to import space. Please try again.';
             }
         }
+    } catch (error) {
+        nodes.importError.textContent = `Import failed: ${error.message}`;
+        console.error('Import error:', error);
     }
 }
 
@@ -702,8 +785,11 @@ function addEventListeners() {
     });
     nodes.modalButton.addEventListener('click', () => {
         handleImport();
-        toggleModal(false);
     });
+    nodes.chooseFileBtn.addEventListener('click', () => {
+        nodes.importFile.click();
+    });
+    nodes.importFile.addEventListener('change', handleFileSelect);
 }
 
 // ROUTING
@@ -799,6 +885,10 @@ export function initializeSpaces() {
     nodes.modalContainer = document.querySelector('.modal');
     nodes.modalInput = document.getElementById('importTextArea');
     nodes.modalButton = document.getElementById('importBtn');
+    nodes.importFile = document.getElementById('importFile');
+    nodes.chooseFileBtn = document.getElementById('chooseFileBtn');
+    nodes.fileName = document.getElementById('fileName');
+    nodes.importError = document.getElementById('importError');
 
     nodes.home.setAttribute('href', chrome.runtime.getURL('spaces.html'));
 
@@ -902,6 +992,7 @@ export {
     getSpacesForBackup,
     handleClose,
     normaliseTabUrl,
+    validateImportFormat,
 };
 
 // Export globalSelectedSpace for testing (mutable reference)
