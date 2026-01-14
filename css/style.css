@@ -109,6 +109,49 @@ ul {
 
 /* END RESET */
 
+/* CSS Variables for theming */
+:root {
+    --bg-primary: #fff;
+    --bg-secondary: #91e0c5;
+    --bg-modal: white;
+    --text-primary: #010101;
+    --text-secondary: #333;
+    --text-link: #000;
+    --text-link-hover: #000;
+    --text-muted: #aaa;
+    --border-color: #91e0c5;
+    --border-header: #91e0c5;
+    --border-light: rgba(0, 0, 0, 0.1);
+    --border-modal: rgba(0, 0, 0, 0.8);
+    --button-bg: #ffb946;
+    --button-bg-hover: #ffaf29;
+    --banner-bg: #ffc564;
+    --blocker-bg: rgba(0, 0, 0, 0.19);
+    --duplicate-color: #e58080;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode {
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #2d5a4e;
+    --bg-modal: #2a2a2a;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-link: #e0e0e0;
+    --text-link-hover: #ffffff;
+    --text-muted: #666;
+    --border-color: #2d5a4e;
+    --border-header: #ffffff;
+    --border-light: rgba(255, 255, 255, 0.1);
+    --border-modal: rgba(255, 255, 255, 0.3);
+    --button-bg: #d4952f;
+    --button-bg-hover: #e0a03a;
+    --banner-bg: #4a3820;
+    --blocker-bg: rgba(0, 0, 0, 0.5);
+    --duplicate-color: #d46b6b;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
 html,
 body {
     margin: 0;
@@ -122,6 +165,9 @@ body {
     font-size: 15px;
     padding: 0;
     margin: 0;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 p {
     margin: 0 0 15px;
@@ -131,32 +177,36 @@ input {
     font-weight: 200;
     font-size: 19px;
     padding-left: 5px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
 }
 a {
-    color: #000;
+    color: var(--text-link);
     text-decoration: none;
     font-weight: 300;
 }
 a:hover {
     text-decoration: underline;
+    color: var(--text-link-hover);
 }
 a.active {
-    color: #444;
+    color: var(--text-secondary);
     cursor: default;
     font-weight: 600;
     text-decoration: none;
 }
 
 .mainContent {
-    color: #010101;
-    background: #fff;
+    color: var(--text-primary);
+    background: var(--bg-primary);
     position: relative;
     overflow: hidden;
 }
 .mainContent h2 {
     padding: 0 0 15px 0;
     margin: 30px 0 15px 0;
-    border-bottom: 1px solid #91e0c5;
+    border-bottom: 1px solid var(--border-header);
     font-size: 16px;
     font-weight: 400;
 }
@@ -166,18 +216,20 @@ a.active {
 }
 .mainContent a.selected {
     font-weight: 500;
-    color: black;
+    color: var(--text-link-hover);
 }
 .header {
     height: 68px;
     padding: 0 30px;
-    background-color: #91e0c5;
+    background-color: var(--bg-secondary);
     white-space: nowrap;
+    position: relative;
 }
 .header h1 {
     display: inline-block;
     font-size: 19px;
     padding-top: 5px;
+    color: var(--text-primary);
 }
 .header img {
     width: 32px;
@@ -197,11 +249,31 @@ a.active {
     font-size: 25px;
     background: transparent;
     border: none;
-    color: #000;
+    color: var(--text-primary);
 }
 .header .button:hover {
     cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--border-light);
+}
+.contentNav .header {
+    position: relative;
+}
+#darkModeToggle {
+    display: inline-block;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 10px 12px;
+    font-size: 18px;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+#darkModeToggle:hover {
+    background-color: var(--border-light);
+    border-radius: 3px;
 }
 #actionSwitch,
 #actionOpen {
@@ -215,10 +287,10 @@ a.active {
     margin-top: 4px;
     margin-left: -24px;
     cursor: pointer;
-    color: #aaa;
+    color: var(--text-muted);
 }
 .contentNav .icon:hover {
-    color: #000;
+    color: var(--text-link);
 }
 .contentNav .active {
     font-weight: 600;
@@ -231,7 +303,7 @@ a.active {
 }
 .content {
     margin-left: 360px;
-    border-left: 1px solid #91e0c5;
+    border-left: 1px solid var(--border-color);
     min-height: 100%;
 }
 .content li {
@@ -248,7 +320,7 @@ a.active {
 }
 .tabsList a {
     font-weight: normal;
-    color: #333;
+    color: var(--text-secondary);
     font-size: 13px;
     text-decoration: none;
     max-width: 90%;
@@ -258,7 +330,7 @@ a.active {
     text-overflow: ellipsis;
 }
 .tabsList .duplicate {
-    color: #e58080;
+    color: var(--duplicate-color);
 }
 
 #banner {
@@ -268,7 +340,8 @@ a.active {
     width: 100%;
     height: 130px;
     padding-left: 30px;
-    background-color: #ffc564;
+    background-color: var(--banner-bg);
+    color: var(--text-primary);
     transition: all 0.5s ease;
 }
 #banner.hidden {
@@ -281,15 +354,17 @@ a.active {
 
 #nameForm {
     max-width: 50%;
-    overflow: hidden;
     display: inline-block;
     white-space: nowrap;
-    text-overflow: ellipsis;
     vertical-align: sub;
 }
 #nameForm span {
     font-size: 19px;
     font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
 }
 #nameForm span:hover {
     text-decoration: underline;
@@ -298,6 +373,7 @@ a.active {
 #nameForm input {
     display: none;
     min-width: 300px;
+    box-sizing: border-box;
 }
 
 .blocker,
@@ -311,7 +387,7 @@ a.active {
     height: 100%;
     width: 100%;
     z-index: 1999;
-    background-color: rgba(0, 0, 0, 0.19);
+    background-color: var(--blocker-bg);
 }
 .modal {
     top: 0;
@@ -323,9 +399,13 @@ a.active {
     height: 410px;
     margin: auto;
     border-radius: 3px;
-    border: 1px solid rgba(0, 0, 0, 0.8);
-    background-color: white;
+    border: 1px solid var(--border-modal);
+    background-color: var(--bg-modal);
+    color: var(--text-primary);
     z-index: 2000;
+}
+.modal h2 {
+    color: var(--text-primary);
 }
 .modal textarea {
     width: 99%;
@@ -333,6 +413,9 @@ a.active {
     height: 60%;
     max-height: 60%;
     padding: 5px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
 }
 
 .modal .button {
@@ -341,9 +424,10 @@ a.active {
     text-align: center;
     padding: 8px 50px;
     margin-top: 20px;
-    background-color: #ffb946;
+    background-color: var(--button-bg);
+    color: var(--text-primary);
 }
 .modal .button:hover {
-    background-color: #ffaf29;
+    background-color: var(--button-bg-hover);
     text-decoration: none;
 }

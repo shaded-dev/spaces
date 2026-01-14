@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-01-14
+
+### Added
+
+- Dark mode toggle for the Spaces management page with persistent preference storage
+- Comprehensive dark theme with carefully chosen colors for optimal readability
+- Always-visible dark mode toggle button in the sidebar header
+
+### Fixed
+
+- Fixed missing right border on space name input field when editing
+- Fixed history initialization for spaces created before history tracking feature was added
+- Ensured recently closed tabs section properly displays empty array instead of undefined
+
 ## [1.1.9] - 2025-12-10
 
 ### Changes

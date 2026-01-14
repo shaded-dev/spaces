@@ -147,13 +147,14 @@ function renderTabs(space) {
         space.tabs.forEach(tab => {
             nodes.activeTabs.appendChild(renderTabListEl(tab, space));
         });
-        if (space.history) {
+        if (space.history && space.history.length > 0) {
             space.history.forEach(tab => {
                 nodes.historicalTabs.appendChild(
                     renderTabListEl(tab, space)
                 );
             });
         } else {
+            // No history to display - this is normal for new spaces or spaces where no tabs have been closed yet
             // TODO: hide historical tabs section
         }
     }
@@ -584,6 +585,39 @@ async function performRestoreFromBackup(spaces) {
     }
 }
 
+// DARK MODE
+
+function initializeDarkMode() {
+    try {
+        // Load saved dark mode preference
+        chrome.storage.local.get(['darkMode'], (result) => {
+            if (result.darkMode) {
+                document.body.classList.add('dark-mode');
+            }
+            // Update icon after a brief delay to ensure DOM is ready
+            setTimeout(() => updateDarkModeIcon(result.darkMode || false), 0);
+        });
+    } catch (error) {
+        console.warn('Dark mode initialization failed:', error);
+    }
+}
+
+function toggleDarkMode() {
+    const isDarkMode = document.body.classList.toggle('dark-mode');
+    updateDarkModeIcon(isDarkMode);
+    
+    // Save preference
+    chrome.storage.local.set({ darkMode: isDarkMode });
+}
+
+function updateDarkModeIcon(isDarkMode) {
+    const toggleBtn = document.getElementById('darkModeToggle');
+    if (toggleBtn) {
+        toggleBtn.className = isDarkMode ? 'fa fa-sun-o' : 'fa fa-moon-o';
+        toggleBtn.title = isDarkMode ? 'Switch to light mode' : 'Switch to dark mode';
+    }
+}
+
 // EVENT LISTENERS FOR STATIC DOM ELEMENTS
 
 function addEventListeners() {
@@ -600,6 +634,12 @@ function addEventListeners() {
             handleAutoUpdateRequest(request.spaces);
         }
     });
+
+    // register dark mode toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+    }
 
     // register dom listeners
     nodes.nameFormDisplay.addEventListener('click', () => {
@@ -744,6 +784,9 @@ export function initializeSpaces() {
     nodes.modalButton = document.getElementById('importBtn');
 
     nodes.home.setAttribute('href', chrome.runtime.getURL('spaces.html'));
+
+    // initialize dark mode
+    initializeDarkMode();
 
     // initialise event listeners for static elements
     addEventListeners();

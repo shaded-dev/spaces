@@ -806,7 +806,7 @@ async function requestSpaceFromWindowId(windowId, matchByTabs) {
             windowId: session.windowId,
             name: session.name,
             tabs: session.tabs,
-            history: session.history,
+            history: session.history || [],
         };
         return space;
     } else {
@@ -875,7 +875,7 @@ async function requestSpaceFromSessionId(sessionId) {
         windowId: session.windowId,
         name: session.name,
         tabs: session.tabs,
-        history: session.history,
+        history: session.history || [],
     };
 }
 
