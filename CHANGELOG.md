@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Export filenames now include ISO 8601 date format (YYYY-MM-DD) for better organization
   - Backup files: `spaces-backup_2026-01-14.json`
   - Single space exports: `spacename_2026-01-14.txt`
+- Added unit tests for `getISO8601Date()` function (15 test cases)
+- Test coverage maintained at 23.79%
 
 ## [1.2.0] - 2026-01-14
 

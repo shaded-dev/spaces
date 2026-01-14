@@ -898,6 +898,7 @@ async function getSpacesForBackup() {
 // Export for testing
 export {
     addDuplicateMetadata,
+    getISO8601Date,
     getSpacesForBackup,
     handleClose,
     normaliseTabUrl,
