@@ -444,6 +444,20 @@ async function handleImport() {
     }
 }
 
+/**
+ * Generates an ISO 8601 date string for use in filenames.
+ * Format: YYYY-MM-DD
+ * @returns {string} ISO 8601 formatted date
+ */
+function getISO8601Date() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+}
+
 async function handleBackup() {
     // Get all spaces in lean format for backup
     const leanSpaces = await getSpacesForBackup();
@@ -452,7 +466,8 @@ async function handleBackup() {
         type: 'application/json',
     });
     const blobUrl = URL.createObjectURL(blob);
-    const filename = 'spaces-backup.json';
+    const date = getISO8601Date();
+    const filename = `spaces-backup_${date}.json`;
     const link = document.createElement('a');
     link.setAttribute('href', blobUrl);
     link.setAttribute('download', filename);
@@ -474,7 +489,9 @@ async function handleExport() {
 
     const blob = new Blob([csvContent], { type: 'text/plain' });
     const blobUrl = URL.createObjectURL(blob);
-    const filename = `${space.name || 'untitled'}.txt`;
+    const date = getISO8601Date();
+    const spaceName = space.name || 'untitled';
+    const filename = `${spaceName}_${date}.txt`;
     const link = document.createElement('a');
     link.setAttribute('href', blobUrl);
     link.setAttribute('download', filename);

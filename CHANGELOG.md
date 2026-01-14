@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-01-14
+
+### Changed
+
+- Export filenames now include ISO 8601 date format (YYYY-MM-DD) for better organization
+  - Backup files: `spaces-backup_2026-01-14.json`
+  - Single space exports: `spacename_2026-01-14.txt`
+
 ## [1.2.0] - 2026-01-14
 
 ### Added
