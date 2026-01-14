@@ -91,6 +91,20 @@ describe('validateImportFormat', () => {
             const result = validateImportFormat(backup);
             expect(result.valid).toBe(true);
         });
+
+        test('should accept backup with empty space name', () => {
+            const backup = JSON.stringify([
+                {
+                    name: '',
+                    tabs: [{ title: 'Tab', url: 'https://example.com' }]
+                }
+            ]);
+            
+            const result = validateImportFormat(backup);
+            expect(result.valid).toBe(true);
+            expect(result.type).toBe('json');
+            expect(result.data[0].name).toBe('');
+        });
     });
 
     describe('invalid JSON backup format', () => {
@@ -129,6 +143,17 @@ describe('validateImportFormat', () => {
         test('should reject space without tabs', () => {
             const backup = JSON.stringify([
                 { name: 'Space' }
+            ]);
+            
+            const result = validateImportFormat(backup);
+            expect(result.valid).toBe(false);
+            expect(result.type).toBe('json');
+            expect(result.error).toContain('name and tabs');
+        });
+
+        test('should reject space with tabs not being an array', () => {
+            const backup = JSON.stringify([
+                { name: 'Space', tabs: 'not an array' }
             ]);
             
             const result = validateImportFormat(backup);

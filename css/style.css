@@ -396,7 +396,7 @@ a.active {
     right: 0;
     padding: 20px;
     width: 70%;
-    height: 410px;
+    height: 520px;
     margin: auto;
     border-radius: 3px;
     border: 1px solid var(--border-modal);
@@ -406,16 +406,17 @@ a.active {
 }
 .modal h2 {
     color: var(--text-primary);
+    margin-bottom: 15px;
 }
 .modal textarea {
     width: 99%;
     max-width: 99%;
-    height: 60%;
-    max-height: 60%;
+    height: 200px;
     padding: 5px;
     background: var(--bg-primary);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
+    box-sizing: border-box;
 }
 
 .modal .button {
@@ -432,29 +433,31 @@ a.active {
     text-decoration: none;
 }
 
-.importOptions {
+.modal .importOptions {
     margin-bottom: 15px;
 }
-.fileImport {
+.modal .fileImport {
     margin-bottom: 10px;
 }
-.fileImport .button {
+.modal .fileImport .button {
     padding: 8px 20px;
     margin-right: 10px;
+    margin-top: 0;
 }
-#fileName {
+.modal #fileName {
     color: var(--text-secondary);
     font-size: 14px;
 }
-.orDivider {
+.modal .orDivider {
     text-align: center;
     color: var(--text-muted);
-    margin: 15px 0;
+    margin: 12px 0;
     font-size: 14px;
 }
-.error-message {
+.modal .error-message {
     color: var(--duplicate-color);
     font-size: 14px;
     margin-top: 10px;
+    margin-bottom: 10px;
     min-height: 20px;
 }

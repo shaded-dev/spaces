@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2026-01-14
+
+### Fixed
+
+- **Import Validation**: Fixed validation logic to properly accept spaces with empty names
+  - Changed from truthiness check to property existence check using `hasOwnProperty()`
+  - Now validates that `tabs` is actually an array, not just that it exists
+- **Import Modal Layout**: Fixed modal overflow issues
+  - Increased modal height from 410px to 520px to accommodate all elements
+  - Changed textarea from percentage-based height (60%) to fixed 200px
+  - Import button and error messages now properly contained within modal
+- **Character Encoding**: Added UTF-8 charset meta tag to HTML files
+  - Fixes display of special characters like em dashes (—)
+  - Applied to both `spaces.html` and `popup.html`
+- **Import Modal Heading**: Changed from "Import a new space" to "Import spaces" to better reflect functionality (supports both single and multiple space imports)
+
+### Test Coverage
+
+- Added 2 additional unit tests for import validation
+- Total tests: 305 (up from 303)
+- All tests passing
+
 ## [1.2.2] - 2026-01-14
 
 ### Added

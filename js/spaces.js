@@ -436,9 +436,13 @@ function validateImportFormat(content) {
         }
         
         // Validate each space has required fields
-        const invalidSpace = parsed.find(space => !space.name || !space.tabs);
+        const invalidSpace = parsed.find(space => 
+            !space.hasOwnProperty('name') || 
+            !space.hasOwnProperty('tabs') ||
+            !Array.isArray(space.tabs)
+        );
         if (invalidSpace) {
-            return { type: 'json', valid: false, error: 'Invalid backup format: spaces must have name and tabs' };
+            return { type: 'json', valid: false, error: 'Invalid backup format: spaces must have name and tabs properties' };
         }
         
         return { type: 'json', valid: true, data: parsed };
