@@ -59,9 +59,27 @@ export function getWindowIdFromContext(urlString, currentWindowId) {
     return !isNaN(windowId) && windowId > 0 ? windowId : false;
 }
 
+/**
+ * Initialize dark mode based on saved preference
+ */
+function initializeDarkMode() {
+    try {
+        chrome.storage.local.get(['darkMode'], (result) => {
+            if (result.darkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    } catch (error) {
+        console.warn('Dark mode initialization failed:', error);
+    }
+}
+
 /** Initialize the popup window. */
 export function initializePopup() {
     document.addEventListener('DOMContentLoaded', async () => {
+        // Initialize dark mode
+        initializeDarkMode();
+        
         const url = getHashVariable('url', window.location.href);
         globalUrl = url !== '' ? decodeURIComponent(url) : false;
 

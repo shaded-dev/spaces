@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Dark mode toggle for the Spaces management page with persistent preference storage
 - Comprehensive dark theme with carefully chosen colors for optimal readability
 - Always-visible dark mode toggle button in the sidebar header
+- Dark mode support for extension popup (syncs with main page preference)
 
 ### Fixed
 
